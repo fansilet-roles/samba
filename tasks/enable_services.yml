@@ -1,0 +1,6 @@
+---
+- name: "Enabling {{ item.name | upper }} daemon"
+  ansible.builtin.service:
+    name: "{{ item.name }}"
+    state: started
+    enabled: true

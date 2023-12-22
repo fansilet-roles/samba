@@ -1,0 +1,8 @@
+---
+- name: "Creating the directory for the share {{ item.name }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode | default('0777', true) }}"
+    owner: "{{ item.owner | default('root', true) }}"
+    group: "{{ item.group | default('root', true) }}"

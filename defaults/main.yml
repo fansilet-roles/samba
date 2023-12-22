@@ -1,0 +1,36 @@
+---
+# define the default samba workgroup name
+samba_workgroup: "WORKGROUP"
+
+# define the default samba server string
+samba_server_string: "Samba Server"
+
+# define a list of directories to be created and samba shares definition
+samba_shares:
+  - name: "Public"
+    path: "/mnt/public"
+    mode: "1777"
+    owner: root
+    group: root
+    browseable: true
+    guest: true
+    force_user: nobody
+    read_only: false
+    writable: true
+
+  - name: "CDROM"
+    path: "/mnt/cdrom"
+    mode: "0755"
+    browseable: true
+    read_only: true
+    guest: true
+
+# define the samba packages to be installed
+samba_packages:
+  - samba
+  - samba-client
+
+# define the samba daemons to enable and start
+samba_services:
+  - name: smb
+  - name: nmb

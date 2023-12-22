@@ -1,0 +1,24 @@
+---
+# tasks file for samba
+- name: "Installing Samba packages"
+  ansible.builtin.package:
+    name: "{{ samba_packages }}"
+    state: present
+
+- name: "Including Share Directory Creation"
+  ansible.builtin.include_tasks: create_shares.yml
+  loop: "{{ samba_shares }}"
+
+- name: "Configuring Samba"
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    backup: true
+    mode: '0644'
+  notify:
+    - restart smb
+    - restart nmb
+
+- name: "Including Service Enable"
+  ansible.builtin.include_tasks: enable_services.yml
+  loop: "{{ samba_services }}"

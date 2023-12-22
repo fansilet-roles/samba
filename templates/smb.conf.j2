@@ -1,0 +1,27 @@
+[global]
+   workgroup = {{ samba_workgroup }}
+   server string = {{ samba_server_string }}
+   security = user
+   map to guest = Bad User
+   guest account = nobody
+
+{% for share in samba_shares %}
+[{{ share.name | lower }}]
+   path = {{ share.path }}
+{% if share.browseable is defined %}
+   browseable = {{ "yes" if share.browseable else "no" }}
+{% endif %}
+{% if share.writable is defined %}
+   writable = {{ "yes" if share.writable else "no" }}
+{% endif %}
+{% if share.read_only is defined %}
+   read only = {{ "yes" if share.read_only else "no" }}
+{% endif %}
+{% if share.guest is defined %}
+   guest ok = {{ "yes" if share.guest else "no" }}
+{% endif %}
+{% if share.force_user is defined %}
+   force user = {{ share.force_user }}
+{% endif %}
+
+{% endfor %}

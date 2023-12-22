@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Igor Brandao
+  description: Create a Podman Quadlet samba server
+  license: GPL-2.0-or-later
+  min_ansible_version: '2.10'
+  platforms:
+    - name: EL
+      versions:
+        - '8'
+  galaxy_tags:
+    - podman
+    - quadlet
+    - samba
+    - smb
+    - nmb
+
+dependencies: []
