@@ -17,6 +17,11 @@ Role Variables
   `WORKGROUP`).  
 
 * `samba_server_string`: (`str`) - Defines the samba server string  
+* `samba_netbios`: (`str`) - Define the netbios name  
+* `samba_all_printers`: (`bool`) - Toggle to enable all system printers shares
+  (default `false`)  
+* `samba_listen`: (`str`) - A list of interfaces for listening e.g `lo eth0`  
+* `samba_hosts_allow`: (`str`) - A space separated list of allowed addresses  
 * `samba_shares`: (`list`) - A list of shares to be created.  
 * `samba_shares.name`: The name of share to be created.  
 * `samba_shares.path`: Creates the path in the OS and the share in smb.conf
@@ -68,7 +73,35 @@ Example Playbook
         writable: true
 
   roles:
-    - role: mrbrandao.samba
+    - role: samba
+```
+_when using the role from the
+[`server`](https://galaxy.ansible.com/ui/repo/published/mrbrandao/server/)
+collection call the role as `mrbrandao.server.samba` e.g:_  
+
+```yaml
+
+---
+- name: "Creating a Standalone Samba Server Using the Collection"
+  hosts: homelab
+  gather_facts: false
+  vars:
+    samba_workgroup: "HomeLab"
+    samba_server_string: "Samba Box"
+    samba_shares:
+      - name: "Public"
+        path: "/mnt/public"
+        mode: "1777"
+        owner: root
+        group: root
+        browseable: true
+        guest: true
+        force_user: nobody
+        read_only: false
+        writable: true
+
+  roles:
+    - role: mrbrandao.server.samba
 ```
 
 Developing and Testing

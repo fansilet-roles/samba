@@ -5,6 +5,20 @@ samba_workgroup: "WORKGROUP"
 # define the default samba server string
 samba_server_string: "Samba Server"
 
+# define the netbios name
+samba_netbios: "MYSERVER"
+
+# share all printers
+samba_all_printers: false
+
+# define the listen interfaces e.g:
+# "lo eth0 192.168.1.2/24 192.168.10.1/24"
+samba_listen: ""
+
+# define the host allow list e.g:
+# "127. 192.168.12. 192.168.13."
+samba_hosts_allow: "127."
+
 # define a list of directories to be created and samba shares definition
 samba_shares:
   - name: "Public"

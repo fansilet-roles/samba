@@ -1,9 +1,35 @@
+#======================= Global Settings =====================================
+# {{ ansible_managed }}
+
 [global]
    workgroup = {{ samba_workgroup }}
    server string = {{ samba_server_string }}
+   netbios name = {{ samba_netbios }}
    security = user
    map to guest = Bad User
    guest account = nobody
+{% if samba_all_printers %}
+   load printers = yes
+   cups options = raw
+   printing = cups
+   printcap name = /etc/printcap
+{% endif %}
+{% if samba_listen != "" %}
+   interfaces = {{ samba_listen }}
+{% endif %}
+   hosts allow = {{ samba_hosts_allow }}
+
+#============================ Share Definitions ==============================
+
+{% if samba_all_printers %}
+[printers]
+   comment = All Printers
+   path = /var/tmp
+   browseable = no
+   guest ok = no
+   writable = no
+   printable = yes
+{% endif %}
 
 {% for share in samba_shares %}
 [{{ share.name | lower }}]
