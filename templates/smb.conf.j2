@@ -3,11 +3,16 @@
 
 [global]
    workgroup = {{ samba_workgroup }}
+{% if samba_nt1 %}
+   client min protocol = NT1
+   server min protocol = NT1
+{% endif %}
    server string = {{ samba_server_string }}
    netbios name = {{ samba_netbios }}
    security = user
    map to guest = Bad User
    guest account = nobody
+   passdb backend = tdbsam
 {% if samba_all_printers %}
    load printers = yes
    cups options = raw
@@ -34,6 +39,9 @@
 {% for share in samba_shares %}
 [{{ share.name | lower }}]
    path = {{ share.path }}
+{% if share.comment is defined %}
+   comment = {{ share.comment }}
+{% endif %}
 {% if share.browseable is defined %}
    browseable = {{ "yes" if share.browseable else "no" }}
 {% endif %}
@@ -48,6 +56,12 @@
 {% endif %}
 {% if share.force_user is defined %}
    force user = {{ share.force_user }}
+{% endif %}
+{% if share.create_mask is defined %}
+   create mask = {{ share.create_mask }}
+{% endif %}
+{% if share.dir_mask is defined %}
+   directory mask = {{ share.dir_mask }}
 {% endif %}
 
 {% endfor %}

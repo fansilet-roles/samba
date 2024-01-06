@@ -13,9 +13,11 @@ Requirements
 Role Variables
 --------------
 
+* `samba_mode`: (`str`) - Define the samba server installation method. Support
+  `host` or `quadlet`. (default `host`)  
 * `samba_workgroup`: (`str`) - Defines the samba server workgroup. (default
   `WORKGROUP`).  
-
+* `samba_nt1`: (`bool`) - Enable support to SMB1 (default: `false`)  
 * `samba_server_string`: (`str`) - Defines the samba server string  
 * `samba_netbios`: (`str`) - Define the netbios name  
 * `samba_all_printers`: (`bool`) - Toggle to enable all system printers shares
@@ -24,6 +26,7 @@ Role Variables
 * `samba_hosts_allow`: (`str`) - A space separated list of allowed addresses  
 * `samba_shares`: (`list`) - A list of shares to be created.  
 * `samba_shares.name`: The name of share to be created.  
+* `samba_shares.comment`: Define a comment description to the share  
 * `samba_shares.path`: Creates the path in the OS and the share in smb.conf
   file.  
 * `samba_shares.mode`: The OS directory permission mode  
@@ -35,6 +38,8 @@ Role Variables
 * `samba_shares.force_user`: Define the share user owner  
 * `samba_shares.read_only`: Toggle the samba share `read_only` flag  
 * `samba_shares.writable`: Toggle the samba share `writable` flag
+* `samba_shares.dir_mask`: Define the directory creation mask to the share  
+* `samba_shares.create_mask`: Define the creation mask to the share  
 * `samba_packages`: The list of packages to be installed  
 * `samba_services`: The list of `smb` services, default `smb, nmb`  
   

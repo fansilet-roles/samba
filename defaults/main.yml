@@ -1,6 +1,14 @@
 ---
+# define the installation method when set to `host` will install samba in the
+# host os system, if defined to `quadlet` will create a podman quadlet systemd
+# unit file and use the samba server from a container
+samba_mode: "host"
+
 # define the default samba workgroup name
 samba_workgroup: "WORKGROUP"
+
+# enable support to SMBv1 protocol
+samba_nt1: false
 
 # define the default samba server string
 samba_server_string: "Samba Server"
@@ -22,6 +30,7 @@ samba_hosts_allow: "127."
 # define a list of directories to be created and samba shares definition
 samba_shares:
   - name: "Public"
+    comment: "Public Share"
     path: "/mnt/public"
     mode: "1777"
     owner: root
@@ -31,6 +40,8 @@ samba_shares:
     force_user: nobody
     read_only: false
     writable: true
+    dir_mask: 1777
+    create_mask: 666
 
   - name: "CDROM"
     path: "/mnt/cdrom"
