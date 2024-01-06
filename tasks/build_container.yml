@@ -1,0 +1,36 @@
+---
+# build the container template
+- name: "Assuring Container Context Dir Exists"
+  ansible.builtin.file:
+    path: "{{ __samba_container_context }}"
+    state: directory
+    mode: '0755'
+
+- name: "Syncing Container Context Files"
+  ansible.posix.synchronize:
+    src: "templates/context/"
+    dest: "{{ __samba_container_context }}"
+
+- name: "Assuring SMB Path Exists"
+  ansible.builtin.file:
+    path: "{{ __samba_server_path }}"
+    state: directory
+    mode: '0755'
+
+- name: "Syncing Image Template"
+  ansible.builtin.template:
+    src: Containerfile
+    dest: "{{ __samba_containerfile }}"
+
+- name: "Syncing SMB Template"
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: "{{ __samba_server_path }}/smb.conf"
+
+- name: "Building Container Image"
+  containers.podman.podman_image:
+    name: "{{ samba_quadlet['name'] }}"
+    tag: "{{ samba_quadlet['tag'] }}"
+    path: "{{ __samba_container_context }}"
+    build:
+      file: "{{ __samba_containerfile }}"

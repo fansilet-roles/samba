@@ -1,12 +1,16 @@
 ---
-- name: Converge
-  hosts: all
-  tasks:
-    # replace these tasks with whatever you find suitable to test
-    - name: Copy something to test use of synchronize module
-      ansible.builtin.copy:
-        src: /etc/hosts
-        dest: /tmp/hosts-from-controller
-    - name: "Include samba"
-      ansible.builtin.include_role:
-        name: "samba"
+- name: Converge on Host
+  hosts: cs8
+  gather_facts: false
+  roles:
+    - role: samba
+      samba_mode: "host"
+      samba_nt1: true
+
+- name: Converge on Quadlet
+  hosts: pinp
+  gather_facts: false
+  roles:
+    - role: samba
+      samba_mode: "quadlet"
+      samba_nt1: true

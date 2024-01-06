@@ -1,0 +1,11 @@
+# Samba Server Container File
+FROM        quay.io/centos/centos:stream8
+RUN         dnf -y install epel-release
+RUN         dnf -y install \
+            supervisor \
+            {% for pkg in samba_packages %}{{ pkg }} {% endfor %}
+
+EXPOSE      445/tcp 139/tcp 137/udp 138/udp
+COPY        supervisord.conf /etc/supervisor/conf.d/supervisord.conf 
+ENTRYPOINT  ["/usr/bin/supervisord"]
+CMD         ["-c", "/etc/supervisor/conf.d/supervisord.conf"]

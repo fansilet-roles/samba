@@ -59,3 +59,8 @@ samba_packages:
 samba_services:
   - name: smb
   - name: nmb
+
+# define the quadlet container image settings
+samba_quadlet:
+  name: quay.io/mrbrandao/samba-server
+  tag: latest

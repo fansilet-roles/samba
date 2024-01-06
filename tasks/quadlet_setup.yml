@@ -1,0 +1,8 @@
+---
+# setup samba server in a quadlet container
+- name: "Including Container Build"
+  ansible.builtin.include_tasks: "build_container.yml"
+
+- name: "Including Share Directory Creation"
+  ansible.builtin.include_tasks: create_shares.yml
+  loop: "{{ samba_shares }}"

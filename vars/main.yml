@@ -1,0 +1,14 @@
+---
+
+# the directory where context will be created to copy and build the samba
+# container
+__samba_tmp: "/tmp"
+
+# fixed path where the Containerfile template is copied on the host before build
+__samba_containerfile: "{{ __samba_tmp }}/Containerfile-samba"
+
+# fixed to store the samba configuration files to be mounted by quadlet
+__samba_server_path: "/etc/samba/template"
+
+# define the image build context directory
+__samba_container_context: "{{ __samba_tmp }}/samba-server-context"

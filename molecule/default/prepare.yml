@@ -1,0 +1,10 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Installing Packages
+      ansible.builtin.dnf:
+        name:
+          - rsync
