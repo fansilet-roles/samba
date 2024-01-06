@@ -5,6 +5,14 @@ This role deploy a [Standalone Samba Server](https://wiki.samba.org/index.php/Se
 It can be deployed either to a regular GNU/Linux box or by creating a 
 [Podman Quadlet](https://github.com/containers/quadlet) container.  
 
+The role uses ansible tags that allows use `host` mode or `quadlet` mode.
+Use `ansible-playbook playbook.yml --tags host` to install the Samba Server in a
+host machine. 
+
+Use `ansible-playbook playbook.yml --tags quadlet` to build a Samba Server
+Container which will run as a Quadlet. _When using quadlet the service
+`samba-server` will manage the SMB and NMB services_  
+
 Requirements
 ------------
 
@@ -107,6 +115,47 @@ collection call the role as `mrbrandao.server.samba` e.g:_
 
   roles:
     - role: mrbrandao.server.samba
+```
+
+* Example playbook using the `quadlet` mode:  
+
+```yaml
+---
+- name: "Creating a Quadlet Samba Server Using the Collection"
+  hosts: homelab
+  gather_facts: false
+  vars:
+    samba_mode: "quadlet"
+    samba_workgroup: "HomeLab"
+    samba_server_string: "Samba Box"
+    samba_shares:
+      - name: "Public"
+        path: "/mnt/public"
+        mode: "1777"
+        owner: root
+        group: root
+        browseable: true
+        guest: true
+        force_user: nobody
+        read_only: false
+        writable: true
+
+  roles:
+    - role: mrbrandao.server.samba
+
+```
+
+_this role uses the `tags` `host` or `quadlet`, when using the above playbooks
+in to install a samba server in a host machine use the tag `host` e.g:_  
+
+```bash
+ansible-playbook playbook.yml --tags host
+```
+
+To install the samba server in a container use the quadlet tag, e.g:  
+
+```bash
+ansible-playbook playbook.yml --tags quadlet
 ```
 
 Developing and Testing

@@ -26,6 +26,9 @@
   ansible.builtin.template:
     src: smb.conf.j2
     dest: "{{ __samba_server_path }}/smb.conf"
+  notify:
+    - daemon-reload
+    - quadlet-restart
 
 - name: "Building Container Image"
   containers.podman.podman_image:
@@ -34,3 +37,6 @@
     path: "{{ __samba_container_context }}"
     build:
       file: "{{ __samba_containerfile }}"
+  notify:
+    - daemon-reload
+    - quadlet-restart

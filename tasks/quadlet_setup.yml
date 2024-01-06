@@ -6,3 +6,6 @@
 - name: "Including Share Directory Creation"
   ansible.builtin.include_tasks: create_shares.yml
   loop: "{{ samba_shares }}"
+
+- name: "Including Quadlet Installation"
+  ansible.builtin.include_tasks: install_quadlet.yml

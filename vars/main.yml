@@ -12,3 +12,9 @@ __samba_server_path: "/etc/samba/template"
 
 # define the image build context directory
 __samba_container_context: "{{ __samba_tmp }}/samba-server-context"
+
+# define the systemD directory for quadlet files
+__samba_unit_path: "/usr/share/containers/systemd/"
+
+# define the quadlet container file
+__samba_quadlet_container: "{{ __samba_unit_path }}samba-server.container"

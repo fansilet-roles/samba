@@ -9,3 +9,14 @@
   service:
     name: nmb
     state: restarted
+
+- name: reload daemon
+  ansible.builtin.shell:
+    cmd: systemctl daemon-reload
+  listen: daemon-reload
+
+- name: restart quadlet container
+  service:
+    name: samba-server
+    state: restarted
+  listen: quadlet-restart

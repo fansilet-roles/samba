@@ -1,0 +1,12 @@
+---
+# install and configure the quadlet container file
+- name: "Installing the quadlet Container template"
+  ansible.builtin.template:
+    src: samba-server.container.j2
+    dest: "{{ __samba_quadlet_container }}"
+  notify:
+    - daemon-reload
+    - quadlet-restart
+
+- name: "Flush Handlers"
+  ansible.builtin.meta: flush_handlers
