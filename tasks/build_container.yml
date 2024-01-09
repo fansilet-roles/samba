@@ -1,5 +1,9 @@
 ---
 # build the container template
+- name: "Inclduing Rebuild Container Tasks"
+  ansible.builtin.include_tasks: "rebuild_container.yml"
+  when: samba_quadlet_rebuild|bool
+
 - name: "Assuring Container Context Dir Exists"
   ansible.builtin.file:
     path: "{{ __samba_container_context }}"

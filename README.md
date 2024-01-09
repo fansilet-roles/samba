@@ -25,7 +25,8 @@ Role Variables
   `host` or `quadlet`. (default `host`)  
 * `samba_workgroup`: (`str`) - Defines the samba server workgroup. (default
   `WORKGROUP`).  
-* `samba_nt1`: (`bool`) - Enable support to SMB1 (default: `false`)  
+* `samba_home`: (`bool`) - Toggle the Home User shares. (default: `false`)  
+* `samba_protocol`: (`str`) - Define the minimal client and [server protocol](https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#SERVERMAXPROTOCOL). It can be one of `CORE`, `COREPLUS`, `LANMAN1`, `LANMAN2`, `NT1`, `SMB2_02`, `SMB2_10`, `SMB3_00`, `SMB3_02`, `SMB3_11` or `SMB2_FF`  
 * `samba_server_string`: (`str`) - Defines the samba server string  
 * `samba_netbios`: (`str`) - Define the netbios name  
 * `samba_all_printers`: (`bool`) - Toggle to enable all system printers shares
@@ -50,10 +51,22 @@ Role Variables
 * `samba_shares.create_mask`: Define the creation mask to the share  
 * `samba_packages`: The list of packages to be installed  
 * `samba_services`: The list of `smb` services, default `smb, nmb`  
+* `samba_quadlet_rebuild`: (`bool`) - Remove the previous container image to
+  trigger a clean rebuild (default: `false`) _when set to `false` speeds up the process
+  however if new changes were made in the templates, it's recommended set it to
+  `true`_  
+* `samba_selinux`: (`bool`) - Toggle SELinux configurations on the target
+  server, this will manipulate `sebooleans` and set the proper context type for
+  the shares  
+* `samba_booleans`: (`dict`) - Define a list of SELinux booleans to be enable or
+  disable  
   
 For more information of `SMB` share flags [refere the samba official
 docs](https://wiki.samba.org/index.php/Setting_up_Samba_as_a_Standalone_Server#Creating_the_Shared_Directories) 
 
+The [`smb.conf`](templates/smb.conf) template also support custom user share
+inclusion. The drop-in file `/etc/samba/usershares.conf` can be created with
+additional custom shares. When using quadlet this file will be mounted.  
 
 Dependencies
 ------------
@@ -143,6 +156,33 @@ collection call the role as `mrbrandao.server.samba` e.g:_
   roles:
     - role: mrbrandao.server.samba
 
+```
+
+* Example playbook using SELinux and Quadlet:  
+
+```yaml
+---
+- name: "Deploy Samba Server"
+  hosts:
+    - mysamba
+  become: true
+  tasks:
+    - name: "Install missing packages"
+      ansible.builtin.dnf:
+        name: rsync
+        state: present
+      tags:
+        - quadlet
+
+    - name: "Importing Samba Role"
+      ansible.builtin.import_role:
+        name: mrbrandao.server.samba
+      vars:
+        samba_mode: "quadlet"
+        samba_protocol: "NT1"
+        samba_listen: "lo eth0 192.168.1.252/24"
+        samba_hosts_allow: 192.168.1.0/24
+        samba_selinux: true
 ```
 
 _this role uses the `tags` `host` or `quadlet`, when using the above playbooks

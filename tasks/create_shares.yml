@@ -1,4 +1,12 @@
 ---
+- name: "Assuing Custom Share Exists"
+  ansible.builtin.file:
+    path: "{{ __samba_usershare_dropin }}"
+    mode: 0644
+    owner: root
+    group: root
+    state: touch
+
 - name: "Creating the directory for the share {{ item.name }}"
   ansible.builtin.file:
     path: "{{ item.path }}"

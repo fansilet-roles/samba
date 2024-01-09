@@ -3,9 +3,9 @@
 
 [global]
    workgroup = {{ samba_workgroup }}
-{% if samba_nt1 %}
-   client min protocol = NT1
-   server min protocol = NT1
+{% if samba_protocol != "" %}
+   client min protocol = {{ samba_protocol }}
+   server min protocol = {{ samba_protocol }}
 {% endif %}
    server string = {{ samba_server_string }}
    netbios name = {{ samba_netbios }}
@@ -23,8 +23,21 @@
    interfaces = {{ samba_listen }}
 {% endif %}
    hosts allow = {{ samba_hosts_allow }}
+{% if samba_mode != "host" %}
+   log file = /dev/stdout
+{% endif %}
+   include = /etc/samba/usershares.conf
 
 #============================ Share Definitions ==============================
+
+{% if samba_home %}
+[homes]
+  comment = Home Directories
+  valid users = %S, %D%w%S
+  browseable = no
+  read only = no
+  inherit acls = yes
+{% endif %}
 
 {% if samba_all_printers %}
 [printers]
@@ -34,6 +47,14 @@
    guest ok = no
    writable = no
    printable = yes
+
+[print$]
+  comment = Printer Drivers
+  path = /var/lib/samba/drivers
+  write list = @printadmin root
+  force group = @printadmin
+  create mask = 0644
+  directory mask = 0775
 {% endif %}
 
 {% for share in samba_shares %}
@@ -56,6 +77,9 @@
 {% endif %}
 {% if share.force_user is defined %}
    force user = {{ share.force_user }}
+{% endif %}
+{% if share.force_group is defined %}
+   force group = {{ share.force_group }}
 {% endif %}
 {% if share.create_mask is defined %}
    create mask = {{ share.create_mask }}

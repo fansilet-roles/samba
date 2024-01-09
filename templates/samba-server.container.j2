@@ -6,7 +6,9 @@ After=network.target
 [Container]
 Image={{ samba_quadlet.name }}:{{ samba_quadlet.tag }}
 Network=host
+LogDriver=journald
 Volume={{ __samba_server_path }}/smb.conf:/etc/samba/smb.conf:Z
+Volume=/etc/samba/usershares.conf:/etc/samba/usershares.conf:Z
 {% for share in samba_shares %}
 Volume={{ share.path }}:{{ share.path }}:Z
 {% endfor %}

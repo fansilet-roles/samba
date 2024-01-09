@@ -5,7 +5,7 @@
   roles:
     - role: samba
       samba_mode: "host"
-      samba_nt1: true
+      samba_protocol: "NT1"
 
 - name: Converge on Quadlet
   hosts: pinp
@@ -13,4 +13,4 @@
   roles:
     - role: samba
       samba_mode: "quadlet"
-      samba_nt1: true
+      samba_protocol: "CORE"

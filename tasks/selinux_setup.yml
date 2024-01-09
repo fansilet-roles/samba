@@ -1,0 +1,25 @@
+---
+- name: "Enabling SELinux Samba Booleans"
+  ansible.posix.seboolean:
+    name: "{{ sebool.name }}"
+    state: "{{ sebool.state }}"
+    persistent: "{{ sebool.persistent }}"
+  loop: "{{ samba_booleans }}"
+  loop_control:
+    loop_var: sebool
+
+- name: "Setting SELinux Label for Shares"
+  community.general.sefcontext:
+    target: "{{ share.path }}/(/.*)?"
+    setype: "{{ __samba_selinux_share_type }}"
+    state: present
+  loop: "{{ samba_shares }}"
+  loop_control:
+    loop_var: share
+
+- name: "Restoring SELinux Context on Shares"
+  ansible.builtin.command:
+    cmd: restorecon -r "{{ share.path }}"
+  loop: "{{ samba_shares }}"
+  loop_control:
+    loop_var: share

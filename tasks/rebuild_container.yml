@@ -1,0 +1,11 @@
+---
+- name: "Assuring Quadlet is not Running"
+  ansible.builtin.service:
+    name: "{{ __samba_quadlet_service_name }}"
+    state: stopped
+
+- name: "Assuring previous image is removed"
+  containers.podman.podman_image:
+    name: "{{ samba_quadlet['name'] }}"
+    tag: "{{ samba_quadlet['tag'] }}"
+    state: absent

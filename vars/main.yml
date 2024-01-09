@@ -18,3 +18,12 @@ __samba_unit_path: "/usr/share/containers/systemd/"
 
 # define the quadlet container file
 __samba_quadlet_container: "{{ __samba_unit_path }}samba-server.container"
+
+# define the usershare drop-in file
+__samba_usershare_dropin: "/etc/samba/usershares.conf"
+
+# define the selinux context type
+__samba_selinux_share_type: "samba_share_t"
+
+# define default quadlet service name
+__samba_quadlet_service_name: "samba-server"

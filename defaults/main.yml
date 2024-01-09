@@ -1,4 +1,6 @@
 ---
+# yamllint disable rule:line-length
+
 # define the installation method when set to `host` will install samba in the
 # host os system, if defined to `quadlet` will create a podman quadlet systemd
 # unit file and use the samba server from a container
@@ -7,8 +9,14 @@ samba_mode: "host"
 # define the default samba workgroup name
 samba_workgroup: "WORKGROUP"
 
-# enable support to SMBv1 protocol
-samba_nt1: false
+# enable home share directories
+samba_home: false
+
+# define the SMB protocol to be used, e.g: `NT1` will add support for old SMBv1
+# protocol. It can be one of CORE, COREPLUS, LANMAN1, LANMAN2, NT1, SMB2_02,
+# SMB2_10, SMB3_00, SMB3_02, SMB3_11 or SMB2_FF.
+# Read more at: https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#SERVERMAXPROTOCOL
+samba_protocol: ""
 
 # define the default samba server string
 samba_server_string: "Samba Server"
@@ -27,6 +35,11 @@ samba_listen: ""
 # "127. 192.168.12. 192.168.13."
 samba_hosts_allow: "127."
 
+# enable selinux settings, this will use setsebool, semanage and restorecon to
+# enable selinux boolleans and set directory permissions
+# if set to false will not touch any selinux setting
+samba_selinux: false
+
 # define a list of directories to be created and samba shares definition
 samba_shares:
   - name: "Public"
@@ -44,8 +57,8 @@ samba_shares:
     create_mask: 666
 
   - name: "CDROM"
-    path: "/mnt/cdrom"
-    mode: "0755"
+    comment: "CDROM Drive"
+    path: "/media/cdrom"
     browseable: true
     read_only: true
     guest: true
@@ -54,6 +67,7 @@ samba_shares:
 samba_packages:
   - samba
   - samba-client
+  - samba-common-tools
 
 # define the samba daemons to enable and start
 samba_services:
@@ -64,3 +78,22 @@ samba_services:
 samba_quadlet:
   name: quay.io/mrbrandao/samba-server
   tag: latest
+
+# remove the previous container image to trigger a new build
+samba_quadlet_rebuild: false
+
+# define the selinux booleans to enable or disable
+# if you're looking for more use `getsebool -a|grep samba` to get the full list
+samba_booleans:
+  - name: samba_domain_controller
+    state: true
+    persistent: true
+  - name: samba_enable_home_dirs
+    state: true
+    persistent: true
+  - name: samba_export_all_ro
+    state: false
+    persistent: false
+  - name: samba_export_all_rw
+    state: true
+    persistent: true

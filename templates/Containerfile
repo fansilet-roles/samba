@@ -5,7 +5,6 @@ RUN         dnf -y install \
             supervisor \
             {% for pkg in samba_packages %}{{ pkg }} {% endfor %}
 
-EXPOSE      445/tcp 139/tcp 137/udp 138/udp
-COPY        supervisord.conf /etc/supervisor/conf.d/supervisord.conf 
+EXPOSE      137/udp 137/tcp 138/udp 138/tcp 139/udp 139/tcp 445/udp 445/tcp
+COPY        smb-nmb-supervisor.ini /etc/supervisord.d/smb-nmb.ini
 ENTRYPOINT  ["/usr/bin/supervisord"]
-CMD         ["-c", "/etc/supervisor/conf.d/supervisord.conf"]
