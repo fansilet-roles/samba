@@ -1,4 +1,9 @@
 # Samba Server Quadlet Container
+# Since shares can be exported in cifs selinux labels are disable
+# all shares propagation uses the shared method
+# more at: 
+# 1 - propagation: https://docs.podman.io/en/latest/markdown/podman-build.1.html#volume-v-host-dir-container-dir-options
+# 2 - cifs podman: https://lists.podman.io/archives/list/podman@lists.podman.io/thread/4NLMSVWMWYA7AYSAJNMRVJIR22TGIF6J/
 [Unit]
 Description=Samba Server starts SMB and NMB Container
 After=network.target
@@ -7,10 +12,11 @@ After=network.target
 Image={{ samba_quadlet.name }}:{{ samba_quadlet.tag }}
 Network=host
 LogDriver=journald
-Volume={{ __samba_server_path }}/smb.conf:/etc/samba/smb.conf:Z
-Volume=/etc/samba/usershares.conf:/etc/samba/usershares.conf:Z
+SecurityLabelDisable=true
+Volume={{ __samba_server_path }}/smb.conf:/etc/samba/smb.conf
+Volume=/etc/samba/usershares.conf:/etc/samba/usershares.conf
 {% for share in samba_shares %}
-Volume={{ share.path }}:{{ share.path }}:Z
+Volume={{ share.path }}:{{ share.path }}:shared
 {% endfor %}
 
 [Install]

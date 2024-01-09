@@ -19,6 +19,11 @@
     - restart smb
     - restart nmb
 
+- name: "Including SELinux Setup"
+  ansible.builtin.include_tasks:
+    file: "selinux_setup.yml"
+  when: samba_selinux|bool
+
 - name: "Including Service Enable"
   ansible.builtin.include_tasks: enable_services.yml
   loop: "{{ samba_services }}"

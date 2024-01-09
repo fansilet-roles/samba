@@ -22,8 +22,3 @@
     - quadlet
     - never
   when: samba_mode == "quadlet"
-
-- name: "Including SELinux Setup"
-  ansible.builtin.include_tasks:
-    file: "selinux_setup.yml"
-  when: samba_selinux|bool

@@ -68,6 +68,26 @@ The [`smb.conf`](templates/smb.conf) template also support custom user share
 inclusion. The drop-in file `/etc/samba/usershares.conf` can be created with
 additional custom shares. When using quadlet this file will be mounted.  
 
+A `Public` and `CDROM` Shares are being created by default, those shares can be mounted via
+cifs e.g:  
+
+```bash
+sudo mount -t cifs //myserver/public ./public/ -o uid=nobody,gid=nobody,guest,noperm
+```
+
+When using quadlet the `selinux` relabel will not be used since the quadlet
+container runs with `--security-opt label=disable`. All shares are using [the `shared`
+propagation
+method](https://docs.podman.io/en/latest/markdown/podman-build.1.html#volume-v-host-dir-container-dir-options), to allow the mounting to be in sync from the host to the
+container and vice-versa.
+
+* SELinux Notes:  
+In case you're having strange issues with your shares, make sure to check the
+audit logs e.g: `audit2allow -a -w`
+When using quadlet [this discussion with cifs and
+selinux](https://lists.podman.io/archives/list/podman@lists.podman.io/thread/4NLMSVWMWYA7AYSAJNMRVJIR22TGIF6J/)
+might help you.  
+
 Dependencies
 ------------
 
