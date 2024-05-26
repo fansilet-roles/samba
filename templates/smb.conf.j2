@@ -75,6 +75,9 @@
 {% if share.guest is defined %}
    guest ok = {{ "yes" if share.guest else "no" }}
 {% endif %}
+{% if share.public is defined %}
+   public = {{ "yes" if share.public else "no" }}
+{% endif %}
 {% if share.force_user is defined %}
    force user = {{ share.force_user }}
 {% endif %}
